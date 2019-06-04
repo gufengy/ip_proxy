@@ -1,10 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from flask import Flask
 from Manager import Manager
 import time
 from multiprocessing import Process
-import sys
 from Config import Control
-sys.path.append("./ip_proxy")
+
 
 app = Flask(__name__)  # 输入的是类名,或者包名, Flask会根据你传入的名字进行
 m = Manager.Manager()
