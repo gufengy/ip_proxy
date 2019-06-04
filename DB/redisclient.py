@@ -1,22 +1,18 @@
 import redis   # 导入redis模块，通过python操作redis 也可以直接在redis主机的服务端操作缓存数据库
 import random
-from logger import logger
 
 Host = '127.0.0.1'
 Port = 6379
-# Hash_Name = 'ip_proxy'
 Sort_Set = 'ip_proxy'
 Max_Score = 10
-
 
 '''
 redis中的hashmap 的数据key是不能重复的
 '''
-class redisclient():
+class redisclient(object):
 
     def __init__(self):
         self.r = self.get_redis_connect()
-        self.logger = logger(__name__)
 
     '''
     获取redis数据连接池的一个连接
@@ -99,42 +95,13 @@ class redisclient():
         if proxy_score > 1:
             self.add(proxy, proxy_score-1, ip_type)
         elif proxy_score <=1:
-            self.logger.info("ip:    "+proxy+"    过期")
             self.del_proxy(proxy)
 
     def main(self):
-
-        # self.r = self.get_redis_connect()
-        # self.set_value(r, '111.177.182.163', "{'ip': '111.177.182.163', 'port': '9999', '匿名度': '高匿名', '类型': 'HTTP', '位置': '湖北省随州市  电信', '响应速度': '2秒'}")
-        # keys = r.hkeys(Hash_Name)
-        # print(keys)
-        # r.hdel(Hash_Name, "aa")
-        # result = self.get_random_proxy()
-        # print(result)
-
-        # result = self.proxy_exist('111.177.1811163')
-        # print(result)
-        # print(type(result))
-        # self.r.zadd('zset2', 'm1', '22')
         pass
 
 
 
 if __name__ == '__main__':
-    # r = Redis_client()
-    # r.main()
-
-    # import redis
-    import time
-
     pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)
     r = redis.Redis(connection_pool=pool)
-
-
-    # r.zadd("zset1", {"{'ip': '111.177.166.36', '类型': 'HTTP', 'port': '9999'}":10})
-    # r.zadd("zset2", 'm1', 22, 'm2', 44)
-    # print(r.zcard("zset1"))  # 集合长度
-    # print(r.zcard("zset1"))  # 集合长度
-    # print(r.zrange("zset1", 0, -1))  # 获取有序集合中所有元素
-    # print(r.zrange(Sort_Set, 0, -1, desc=True, withscores=True))  # 获取有序集合中所有元素和分数
-    # print(r.zrangebyscore('zset1', 33, 33))

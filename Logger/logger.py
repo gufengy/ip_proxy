@@ -11,11 +11,11 @@ date_fmt = '%Y/%m/%d %H:%M:%S'
 class logger(object):
 
 
-    def __init__(self, name):
+    def __init__(self):
         logging.basicConfig(format=format, level=logging.INFO, datefmt=date_fmt)
         # logging.basicConfig(format=format, level=logging.INFO, filename=file_path, datefmt=date_fmt)
         # self.logger = logging.getLogger(__name__)
-        self.logger = logging.getLogger(name)
+        self.logger = logging.getLogger(__name__)
         formatter = logging.Formatter(format, date_fmt)
         # # chlr = logging.StreamHandler()  # 输出到控制台的handler
         # # chlr.setFormatter(formatter)

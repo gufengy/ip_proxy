@@ -1,26 +1,23 @@
-from get_proxy import get_proxy
-from redisclient import redisclient
-from Test_Proxy_status import Test_proxy_status
-from logger import logger
+from Config import Control
 from multiprocessing.dummy import Pool
 
 MAX_SAVE_NUM = 100  # 数据库中最大的存入数量
 
 
-class main_control(object):
+class Manager(object):
     def __init__(self):
-        self.r = redisclient()  # 获取数据库存储对象
-        self.pro = Test_proxy_status()  # 获取 代理检测对象
-        self.p = get_proxy()  # 获取代理获取对象
-        self.proxy_func_list = get_proxy().proxy_list
-        self.logger = logger(__name__)
+        self.r = Control.get_redis_client()  # 获取数据库存储对象
+        self.pro = Control.get_check_proxy()  # 获取 代理检测对象
+        self.p = Control.get_ip_proxy()  # 获取代理获取对象
+        self.proxy_func_list = Control.get_ip_proxy().proxy_list
+        self.logger = Control.get_logger()
 
     def main(self):
         # print(self.proxy_func_list)
-        proxy_list = get_proxy().proxy_list
+        proxy_list = self.p.proxy_list
         for proxy in proxy_list:
-            func = getattr(get_proxy, proxy)
-            for ip_proxy in func(get_proxy()):
+            func = getattr(self.p, proxy)
+            for ip_proxy in func():
                 print(ip_proxy)
 
     # 设置一个保存数据的函数, 新加入的数据分数为9, 测试完成之后
@@ -49,8 +46,8 @@ class main_control(object):
             flag = False
             if min(len(self.r.get_proxy_keys("http")), len(self.r.get_proxy_keys("https"))) < MAX_SAVE_NUM:
                 self.logger.info("开始添加数据, 本次大概添加数据量为  %s  个" % str(MAX_SAVE_NUM-min(len(self.r.get_proxy_keys("http")), len(self.r.get_proxy_keys("https")))))
-                func = getattr(get_proxy, self.proxy_func_list[next(I)])  # 使用python 反射原理获取一个python的可执行方法
-                flag = self.save_proxy(func(self.p))
+                func = getattr(self.p, self.proxy_func_list[next(I)])  # 使用python 反射原理获取一个python的可执行方法
+                flag = self.save_proxy(func())
             if not flag:
                 self.logger.info("数据量已经是最大值了")
                 break
@@ -79,7 +76,7 @@ class main_control(object):
         return len(self.r.get_proxy_keyong())
 
 if __name__ == '__main__':
-    app = main_control()
+    app = Manager()
     app.check_db()
     # app.check_proxy()
     # app.main()

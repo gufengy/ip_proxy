@@ -1,16 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
-import time
 from fake_useragent import UserAgent
-from logger import logger
+from Config import Control
 
 ip_link1 = "https://www.xicidaili.com/nn/"
 # ip_link2 = "https://www.xicidaili.com/nt/"
 INIT_SCORE = 10
 
-class get_proxy(object):
+class Get_Proxy(object):
     def __init__(self):
-        self.logger = logger(__name__)
+        self.logger = Control.get_logger()
         self.proxy_list = [
             "parse_page_one",
             "parse_page_two",
@@ -111,5 +110,5 @@ class get_proxy(object):
 
 
 if __name__ == '__main__':
-    get_proxy = get_proxy()
-    get_proxy.main()
+    get_proxy = Get_Proxy()
+    # get_proxy.main()

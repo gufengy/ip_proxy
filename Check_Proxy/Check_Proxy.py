@@ -1,20 +1,17 @@
-from redisclient import redisclient
-from logger import logger
+from Config import Control
 from fake_useragent import UserAgent
 import requests
 from requests.exceptions import *
 import time
 
-
-
 Max_score = 10
 
-class Test_proxy_status(object):
+class Check_Proxy(object):
 
     def __init__(self):
-        self.redis = redisclient()
+        self.redis = Control.get_redis_client()
         self.TEST_URL = {"http": "http://ipv4.icanhazip.com/", "https": "https://ipv4.icanhazip.com/"}
-        self.logger = logger(__name__)
+        self.logger = Control.get_logger()
 
     '''
     使用requests检测代理可用性
@@ -40,6 +37,8 @@ class Test_proxy_status(object):
         except (ConnectionError ,ConnectTimeout, ReadTimeout, ProxyError, ChunkedEncodingError, SSLError):
             self.logger.info('代理不可用    ' + proxy + "    剩余分数:" + str(score - 1))
             self.redis.minus_score(proxy)
+            if (score - 1) <= 0:
+                self.logger.info("ip:\t" + proxy + "\t过期")
         except Exception as e:
             self.logger.info("没有预料到的异常" + e.args)
             self.logger.info('代理不可用    ' + proxy + "    剩余分数:" + str(score - 1))

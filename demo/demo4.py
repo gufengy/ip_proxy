@@ -1,6 +1,5 @@
 # 测试python 反射
 
-# from get_proxy import get_proxy
 
 class demo:
 

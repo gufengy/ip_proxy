@@ -1,16 +1,15 @@
 from flask import Flask
-from main_control import main_control
-from logger import logger
+from Manager import Manager
 import time
 from multiprocessing import Process, Pool
 import threading
 
 app = Flask(__name__)  # 输入的是类名,或者包名, Flask会根据你传入的名字进行
-m = main_control()
+m = Manager.Manager()
 # 设置为全局变量, 设置的全局变量需要赋值之后才能进行调用, 否则会出错
 global flag # 设置一个标记,  如果为True的话, 说明已经创建了一个后台进程了
 SLEEP_TIME = 2  # 当检测一次休眠的时间分钟
-log = logger(__name__)
+log = Manager.Manager().logger
 
 # 对全局变量进行赋值
 def set_True():
