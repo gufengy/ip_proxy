@@ -11,9 +11,9 @@ def get_ip_proxy():
     # 获取ip获取类对象
     return Get_Proxy.Get_Proxy()
 
-def get_logger():
+def get_logger(name):
     # 获取日志对象
-    return logger.logger()
+    return logger.logger(name)
 
 def get_check_proxy():
     # 获取ip测试对象

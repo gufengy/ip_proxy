@@ -10,7 +10,7 @@ class Manager(object):
         self.pro = Control.get_check_proxy()  # 获取 代理检测对象
         self.p = Control.get_ip_proxy()  # 获取代理获取对象
         self.proxy_func_list = Control.get_ip_proxy().proxy_list
-        self.logger = Control.get_logger()
+        self.logger = Control.get_logger(__name__)
 
     def main(self):
         # print(self.proxy_func_list)

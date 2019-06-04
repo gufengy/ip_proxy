@@ -11,7 +11,7 @@ class Check_Proxy(object):
     def __init__(self):
         self.redis = Control.get_redis_client()
         self.TEST_URL = {"http": "http://ipv4.icanhazip.com/", "https": "https://ipv4.icanhazip.com/"}
-        self.logger = Control.get_logger()
+        self.logger = Control.get_logger(__name__)
 
     '''
     使用requests检测代理可用性
@@ -42,12 +42,3 @@ class Check_Proxy(object):
         except Exception as e:
             self.logger.info("没有预料到的异常" + e.args)
             self.logger.info('代理不可用    ' + proxy + "    剩余分数:" + str(score - 1))
-
-    def main(self):
-        proxy = "{'ip': '119.101.117.88', 'port': '9999', '匿名度': '高匿名', '类型': 'HTTP', '位置': '湖北省潜江市  电信', '响应速度': '0.6秒', 'score': 10}"
-        self.test_proxy(proxy)
-
-
-if __name__ == '__main__':
-    p = Test_proxy_status()
-    p.main()

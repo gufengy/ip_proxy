@@ -1,30 +1,21 @@
 from flask import Flask
 from Manager import Manager
 import time
-from multiprocessing import Process, Pool
-import threading
+from multiprocessing import Process
+import sys
+from Config import Control
+sys.path.append("./ip_proxy")
 
 app = Flask(__name__)  # 输入的是类名,或者包名, Flask会根据你传入的名字进行
 m = Manager.Manager()
-# 设置为全局变量, 设置的全局变量需要赋值之后才能进行调用, 否则会出错
-global flag # 设置一个标记,  如果为True的话, 说明已经创建了一个后台进程了
 SLEEP_TIME = 2  # 当检测一次休眠的时间分钟
-log = Manager.Manager().logger
-
-# 对全局变量进行赋值
-def set_True():
-    global flag
-    flag = True
-def set_False():
-    global flag
-    flag = False
-aa = 1
+log = Control.get_logger(__name__)
 
 deamon_pro_object = []
 
 @app.route('/')  # 路由部分  当访问 /时会返回这个函数
 def main():
-    if len(deamon_pro_object)>0:
+    if len(deamon_pro_object) > 0:
         return "代理正在执行中"
     p = Process(target=run_daemon, name="守护进程")
     p.daemon = True   # 设置进程为守护进程, 但是如果设置了成了守护进程那么将无法开启子进程, 也就无法进行多进程的检测代理可用性
@@ -57,4 +48,4 @@ def get():
 #     return str(m.get_proxy_keyong())
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=8080)

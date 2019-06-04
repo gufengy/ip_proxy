@@ -9,7 +9,7 @@ INIT_SCORE = 10
 
 class Get_Proxy(object):
     def __init__(self):
-        self.logger = Control.get_logger()
+        self.logger = Control.get_logger(__name__)
         self.proxy_list = [
             "parse_page_one",
             "parse_page_two",
