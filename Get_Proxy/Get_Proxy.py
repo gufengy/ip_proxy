@@ -10,6 +10,7 @@ INIT_SCORE = 10
 class Get_Proxy(object):
     def __init__(self):
         self.logger = Control.get_logger(__name__)
+        # 设置获取ip的方法名
         self.proxy_list = [
             "parse_page_one",
             "parse_page_two",
@@ -34,7 +35,7 @@ class Get_Proxy(object):
     '''
     def parse_page_one(self):
         url = "http://www.shenjidaili.com/open/"
-        self.logger.info("正在抓取神鸡代理: " + url)
+        self.logger.logger.info("正在抓取神鸡代理: " + url)
         response = self.request_get(url)
         proxy_list = []
         soup = BeautifulSoup(response, "lxml")
@@ -59,7 +60,7 @@ class Get_Proxy(object):
         url_list = ["http://www.iphai.com/free/ng", "http://www.iphai.com/free/wg"]
         proxy_list = []
         for url in url_list:
-            self.logger.info("正在抓取ip海代理: " + url)
+            self.logger.logger.info("正在抓取ip海代理: " + url)
             response = self.request_get(url)
             soup = BeautifulSoup(response, "lxml")
             soup = soup.find("table", attrs={"class", "table table-bordered table-striped table-hover"}).find_all("tr")
@@ -79,7 +80,7 @@ class Get_Proxy(object):
     '''
     def parse_page_three(self):
         url = "https://www.xicidaili.com/nn/1"
-        self.logger.info("正在抓取西刺代理: " + url)
+        self.logger.logger.info("正在抓取西刺代理: " + url)
         response = self.request_get(url)
         soup = BeautifulSoup(response, 'lxml').find_all('tr', attrs={'class': 'odd'})  # 使用BeautifulSoup格式化代码
         ip_list = []

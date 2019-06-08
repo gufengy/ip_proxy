@@ -26,11 +26,11 @@ class Manager(object):
         for proxy in proxy_list:
             result = self.r.proxy_exist(proxy, proxy[0:5].replace(":", ""))
             if min(len(self.r.get_proxy_keys("http")), len(self.r.get_proxy_keys("https"))) >= MAX_SAVE_NUM:
-                self.logger.info("数据量充足")
+                self.logger.logger.info("数据量充足")
                 break   # 数据量足够, 结束添加
             if not result:
                 self.r.add(proxy, 9, proxy[0:5].replace(":", ""))  # 如果数据不存在那么将会把刚刚抓取的数据存入数据库, 并且分数设置为9, 设置为9是为了怕这个 代理没有检测就把它设置为了可以取出的状态了
-                self.logger.info("成功添加ip:     " + proxy + "    当前分数为9")
+                self.logger.logger.info("成功添加ip:     " + proxy + "    当前分数为9")
                 flag = True
         return flag
 
@@ -42,14 +42,14 @@ class Manager(object):
     def check_db(self):
         I = iter(range(len(self.proxy_func_list)))
         while True:
-            self.logger.info('开始检查数据库')
+            self.logger.logger.info('开始检查数据库')
             flag = False
             if min(len(self.r.get_proxy_keys("http")), len(self.r.get_proxy_keys("https"))) < MAX_SAVE_NUM:
-                self.logger.info("开始添加数据, 本次大概添加数据量为  %s  个" % str(MAX_SAVE_NUM-min(len(self.r.get_proxy_keys("http")), len(self.r.get_proxy_keys("https")))))
+                self.logger.logger.info("开始添加数据, 本次大概添加数据量为  %s  个" % str(MAX_SAVE_NUM-min(len(self.r.get_proxy_keys("http")), len(self.r.get_proxy_keys("https")))))
                 func = getattr(self.p, self.proxy_func_list[next(I)])  # 使用python 反射原理获取一个python的可执行方法
                 flag = self.save_proxy(func())
             if not flag:
-                self.logger.info("数据量已经是最大值了")
+                self.logger.logger.info("数据量已经是最大值了")
                 break
 
 

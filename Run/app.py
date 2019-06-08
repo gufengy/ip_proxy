@@ -1,6 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from flask import Flask
 from Manager import Manager
 import time
@@ -15,7 +16,7 @@ log = Control.get_logger(__name__)
 
 deamon_pro_object = []
 
-@app.route('/')  # 路由部分  当访问 /时会返回这个函数
+@app.route('/')  # 路由部分 当访问 /时会返回这个函数
 def main():
     if len(deamon_pro_object) > 0:
         return "代理正在执行中"
@@ -27,12 +28,12 @@ def main():
 
 def run_daemon():
     while True:
-        log.info("开始检查代理可用性")
+        log.logger.info("开始检查代理可用性")
         m.check_proxy()
-        log.info('程序开始休眠    10    秒')
+        log.logger.info('程序开始休眠    10    秒')
         time.sleep(10)
         m.check_db()  # 检查数据库
-        log.info("程序开始休眠    %s    分钟" % str(SLEEP_TIME))
+        log.logger.info("程序开始休眠    %s    分钟" % str(SLEEP_TIME))
         time.sleep(SLEEP_TIME*60)
 
 '''
