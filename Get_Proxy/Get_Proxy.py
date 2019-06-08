@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from Config import Control
+import time
 
 ip_link1 = "https://www.xicidaili.com/nn/"
 # ip_link2 = "https://www.xicidaili.com/nt/"
@@ -18,16 +19,17 @@ class Get_Proxy(object):
         ]
 
     def request_get(self, url):
-        try:
-            response = requests.get(url, headers={"user-agent": UserAgent().random}, timeout=15)
-            if response.status_code == 200:
-                return response.text
-            else:
-                self.logger.warning("请求状态码出错:\t" + url + ", 状态码: \t" + str(response.status_code))
-                return None
-        except Exception as e:
-            self.logger.warning("请求出现异常:\t" + url + ", 异常内容: \t" + e.args[0])
-            return None
+        while True:
+            try:
+                response = requests.get(url, headers={"user-agent": UserAgent().random}, timeout=15)
+                if response.status_code == 200:
+                    return response.text
+                else:
+                    self.logger.warning("请求状态码出错:\t" + url + ", 状态码: \t" + str(response.status_code))
+                    time.sleep(10)
+            except Exception as e:
+                self.logger.error("请求出现异常:\t" + url + ", 异常内容: \t", exc_info=True)
+                time.sleep(10)
 
     '''
     获取神鸡代理ip的首页ip地址
