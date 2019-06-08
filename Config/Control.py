@@ -13,7 +13,7 @@ def get_ip_proxy():
 
 def get_logger(name):
     # 获取日志对象
-    return logger.logger(name)
+    return logger.logger(name).logger
 
 def get_check_proxy():
     # 获取ip测试对象

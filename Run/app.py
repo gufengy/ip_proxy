@@ -28,12 +28,12 @@ def main():
 
 def run_daemon():
     while True:
-        log.logger.info("开始检查代理可用性")
+        log.info("开始检查代理可用性")
         m.check_proxy()
-        log.logger.info('程序开始休眠    10    秒')
+        log.info('程序开始休眠    10    秒')
         time.sleep(10)
         m.check_db()  # 检查数据库
-        log.logger.info("程序开始休眠    %s    分钟" % str(SLEEP_TIME))
+        log.info("程序开始休眠    %s    分钟" % str(SLEEP_TIME))
         time.sleep(SLEEP_TIME*60)
 
 '''
