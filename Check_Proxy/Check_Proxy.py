@@ -40,5 +40,5 @@ class Check_Proxy(object):
             if (score - 1) <= 0:
                 self.logger.info("ip:\t" + proxy + "\t过期")
         except Exception as e:
-            self.logger.info("没有预料到的异常" + e.args)
+            self.logger.info("没有预料到的异常" + e.args[0])
             self.logger.info('代理不可用    ' + proxy + "    剩余分数:" + str(score - 1))
