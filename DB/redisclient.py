@@ -28,8 +28,8 @@ class redisclient(object):
     :key 向redis中添加键, 这个键使用 ip 地址作为键
     :score 添加的分数, 第一次插入数据的分数为 9 
     '''
-    def add(self, key, score, key_type):
-        self.r.zadd(key_type, {str(key): score})
+    def add(self, key, score):
+        self.r.zadd(key[0:5].replace(":", ""), {str(key): score})
 
     # '''
     # 获取根据键获取一个代理信息
@@ -77,9 +77,11 @@ class redisclient(object):
 
     '''
     根据传入的ip检测在redis中是否已经添加了该ip的信息, 返回值为boolean类型数据
+    存在 True
+    不存在 False
     '''
     def proxy_exist(self, ip, ip_type):
-        return ip in self.get_proxy_keys(ip_type.upper())
+        return ip in self.get_proxy_keys(ip_type)
 
     '''根据key获取一个ip的分数'''
     def get_score_by_key(self, ip_type, key):
@@ -93,11 +95,12 @@ class redisclient(object):
         ip_type = proxy[0:5].replace(":", "")
         proxy_score = self.get_score_by_key(ip_type, proxy)
         if proxy_score > 1:
-            self.add(proxy, proxy_score-1, ip_type)
+            self.add(proxy, proxy_score-1)
         elif proxy_score <=1:
             self.del_proxy(proxy)
 
     def main(self):
+        print(self.get_proxy_keys("http"))
         pass
 
 
@@ -105,3 +108,4 @@ class redisclient(object):
 if __name__ == '__main__':
     pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)
     r = redis.Redis(connection_pool=pool)
+    redisclient().main()

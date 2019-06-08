@@ -33,8 +33,8 @@ class Check_Proxy(object):
             response = requests.get(self.TEST_URL[ip_type], headers={'user-agent': UserAgent().random}, timeout=15,
                                     proxies=proxies)
             if response.status_code in [200, 502]:
-                self.logger.info('代理可用:     ' + proxy)
-                self.redis.add(proxy, Max_score, ip_type)
+                self.logger.info('代理可用:\t' + proxy)
+                self.redis.add(proxy, Max_score)
             else:
                 self.logger.warning(
                     '请求响应码不合法!    ' + proxy + "    剩余分数:" + str(score - 1) + "\t响应吗为: " + str(response.status_code))
