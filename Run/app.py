@@ -16,14 +16,12 @@ log = Control.get_logger(__name__)
 
 deamon_pro_object = []
 
+
+
 @app.route('/')  # 路由部分 当访问 /时会返回这个函数
 def main():
     if len(deamon_pro_object) > 0:
         return "代理正在执行中"
-    p = Process(target=run_daemon, name="守护进程")
-    p.daemon = True   # 设置进程为守护进程, 但是如果设置了成了守护进程那么将无法开启子进程, 也就无法进行多进程的检测代理可用性
-    p.start()
-    deamon_pro_object.append(p)
     return "线程开始执行"
 
 def run_daemon():
@@ -51,4 +49,8 @@ def get():
 #     return str(m.get_proxy_keyong())
 
 if __name__ == '__main__':
+    p = Process(target=run_daemon, name="守护进程")
+    p.daemon = True  # 设置进程为守护进程, 但是如果设置了成了守护进程那么将无法开启子进程, 也就无法进行多进程的检测代理可用性
+    p.start()
+    deamon_pro_object.append(p)
     app.run(port=8081)
