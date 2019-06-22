@@ -1,4 +1,5 @@
 import requests
+from requests.exceptions import *
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from Config import Control
@@ -15,20 +16,22 @@ class Get_Proxy(object):
         self.proxy_list = [
             "parse_page_one",
             "parse_page_two",
+            "parse_page_four",
             "parse_page_three"
         ]
 
     def request_get(self, url):
         while True:
             try:
-                response = requests.get(url, headers={"user-agent": UserAgent().random}, timeout=15)
+                response = requests.get(url, headers={"user-agent": UserAgent(use_cache_server=False, verify_ssl=False).random}, timeout=15)
                 if response.status_code == 200:
                     return response.text
                 else:
                     self.logger.warning("请求状态码出错:\t" + url + ", 状态码: \t" + str(response.status_code))
                     time.sleep(10)
+
             except Exception as e:
-                self.logger.error("请求出现异常:\t" + url + ", 异常内容: \t", exc_info=True)
+                self.logger.error("\n请求出现异常:\t" + url + ", 异常内容: \t", exc_info=True)
                 time.sleep(10)
 
     '''
@@ -87,31 +90,47 @@ class Get_Proxy(object):
         soup = BeautifulSoup(response, 'lxml').find_all('tr', attrs={'class': 'odd'})  # 使用BeautifulSoup格式化代码
         ip_list = []
         for soup_child in soup:
-            ip_type = soup_child.select('td')[5].string
+            ip_type = soup_child.select('td')[5].string.lower()
             result_ip = ip_type + "://" + soup_child.select('td')[1].string + ":" + soup_child.select('td')[2].string
-            ip_list.append(result_ip.lower())
+            ip_list.append(result_ip)
         return ip_list
 
+    '''
+    获取极速代理, 只获取前三页
+    url = http://www.superfastip.com/welcome/freeip/1
+    '''
+    def parse_page_four(self):
+        url = "http://www.superfastip.com/welcome/freeip/"
+        ip_list = []
+        for page_index in range(1, 4):
+            self.logger.info("正在抓取极速代理: " + url + str(page_index))
+            response = self.request_get(url + str(page_index))
+            soup = BeautifulSoup(response, 'lxml').find_all('table', attrs={'class': 'table text-center '})[1].find(
+                'tbody').find_all('tr')  # 使用BeautifulSoup格式化代码
+            for soup_child in soup:
+                ip_type = soup_child.select('td')[3].string.lower()
+                result_ip = ip_type + "://" + soup_child.select('td')[0].string + ":" + soup_child.select('td')[
+                    1].string
+                print(result_ip)
+                ip_list.append(result_ip)
+        return ip_list
+
+
+
     def main(self):
-        # result = self.parse_page_one()
-        # for proxy in result:
-        #     print(proxy)
-            # print("---------------------------------")
-        # result = self.parse_page_three()
-        # 使用反射进行执行方法
-        proxy_list = self.proxy_list
-        i = 1
-        for proxy  in proxy_list:
-            func = getattr(get_proxy, proxy)
-            ip_proxy = func()
-            for i in range(len(ip_proxy)):
-                print(str(i))
-                print(ip_proxy[i])
+        # proxy_list = self.proxy_list
+        # i = 1
+        # for proxy  in proxy_list:
+        #     func = getattr(get_proxy, proxy)
+        #     ip_proxy = func()
+        #     for i in range(len(ip_proxy)):
+        #         print(str(i))
+        #         print(ip_proxy[i])
 
-
+        pass
 
 
 
 if __name__ == '__main__':
     get_proxy = Get_Proxy()
-    # get_proxy.main()
+    get_proxy.main()
